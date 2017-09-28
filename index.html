@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>AUV tester</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="http://cdn.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+    			  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    			  crossorigin="anonymous"></script>
+    <script type="text/javascript" type="text/javascript">
+      // Connecting to ROS
+      // -----------------
+      alert("HI");
+      var ros = new ROSLIB.Ros({
+        url : 'ws://localhost:9090'
+      });
+
+      ros.on('connection', function() {
+        console.log('Connected to websocket server.');
+      });
+
+      ros.on('error', function(error) {
+        console.log('Error connecting to websocket server: ', error);
+      });
+
+      ros.on('close', function() {
+        console.log('Connection to websocket server closed.');
+      });
+
+      var battery_listener = new ROSLIB.Topic({
+        ros : ros,
+        name : '/batt1_status',
+        messageType : 'bbauv_msgs/Battery'
+      });
+
+      var sa_stats_listener = new ROSLIB.Topic({
+        ros : ros,
+        name : '/SA_stats',
+        messageType : 'bbauv_msgs/SAStats'
+      });
+
+      battery_listener.subscribe(function(message) {
+        $('#battery_capacity').text(message.capacity);
+        $('#battery_temperature').text(message.temperature);
+        $('#battery_pressure').text(message.pressure);
+        $('#battery_used_mah').text(message.used_mah);
+        $('#battery_current').text(message.current);
+        $('#battery_voltage').text(message.voltage);
+      });
+
+      sa_stats_listener.subscribe(function(message) {
+        $('#sa_stats_temperature').text(message.temperature);
+        $('#sa_stats_initial_pressure').text(message.initial_pressure);
+        $('#sa_stats_internal_pressure').text(message.internal_pressure);
+        $('#sa_stats_internal_humidity').text(message.internal_humidity);
+        $('#sa_stats_leak').text(message.leak);
+      });
+    </script>
+  </head>
+
+  <body>
+
+    <!-- Begin page content -->
+    <div class="container">
+      <div class="page-header">
+        <h1>AUV Control Test</h1>
+      </div>
+      <p class="lead">Bumblebee</p>
+      <table>
+        <tr>
+          <th colspan="2">SA Stats</th>
+        </tr>
+        <tr>
+          <td>Temperature</td>
+          <td id="sa_stats_temperature"></td>
+        </tr>
+        <tr>
+          <td>Initial Pressure</td>
+          <td id="sa_stats_initial_pressure"></td>
+        </tr>
+        <tr>
+          <td>Internal Pressure</td>
+          <td id="sa_stats_internal_pressure"></td>
+        </tr>
+        <tr>
+          <td>Internal Humidity</td>
+          <td id="sa_stats_internal_humidity"></td>
+        </tr>
+        <tr>
+          <td>Leak?</td>
+          <td id="sa_stats_leak"></td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <th colspan="2">Battery</th>
+        </tr>
+        <tr>
+          <td>Capacity</td>
+          <td id="battery_capacity"></td>
+        </tr>
+        <tr>
+          <td>Temperature</td>
+          <td id="battery_temperature"></td>
+        </tr>
+        <tr>
+          <td>Pressure</td>
+          <td id="battery_pressure"></td>
+        </tr>
+        <tr>
+          <td>Used mah</td>
+          <td id="battery_used_mah"></td>
+        </tr>
+        <tr>
+          <td>Current</td>
+          <td id="battery_current"></td>
+        </tr>
+        <tr>
+          <td>Voltage</td>
+          <td id="battery_voltage"></td>
+        </tr>
+      </table>
+
+      <table>
+        <tr>
+          <th>Thruster</th>
+          <th>Value</th>
+          <th>Test</th>
+        </tr>
+        <tr>
+          <td>Thruster 1</td>
+          <td><input type="text" value="5"/></td>
+          <td><button>Test</button></td>
+        </tr>
+        <tr>
+          <td>Thruster 2</td>
+          <td><input type="text" value="5"/></td>
+          <td><button>Test</button></td>
+        </tr>
+        <tr>
+          <td>Thruster 3</td>
+          <td><input type="text" value="5"/></td>
+          <td><button>Test</button></td>
+        </tr>
+        <tr>
+          <td>Thruster 4</td>
+          <td><input type="text" value="5"/></td>
+          <td><button>Test</button></td>
+        </tr>
+        <tr>
+          <td>Thruster 5</td>
+          <td><input type="text" value="5"/></td>
+          <td><button>Test</button></td>
+        </tr>
+        <tr>
+          <td>Thruster 6</td>
+          <td><input type="text" value="5"/></td>
+          <td><button>Test</button></td>
+        </tr>
+        <tr>
+          <td>Thruster 7</td>
+          <td><input type="text" value="5"/></td>
+          <td><button>Test</button></td>
+        </tr>
+        <tr>
+          <td>Thruster 8</td>
+          <td><input type="text" value="5"/></td>
+          <td><button>Test</button></td>
+        </tr>
+      </table>
+
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted"></p>
+      </div>
+    </footer>
+
+  </body>
+</html>
