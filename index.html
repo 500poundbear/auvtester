@@ -26,51 +26,88 @@
     <script type="text/javascript" type="text/javascript">
       // Connecting to ROS
       // -----------------
-      alert("HI");
-      var ros = new ROSLIB.Ros({
-        url : 'ws://localhost:9090'
+      $(document).ready(function() {
+        var ros = new ROSLIB.Ros({
+          url : 'ws://localhost:9090'
+        });
+
+        ros.on('connection', function() {
+          console.log('Connected to websocket server.');
+        });
+
+        ros.on('error', function(error) {
+          console.log('Error connecting to websocket server: ', error);
+        });
+
+        ros.on('close', function() {
+          console.log('Connection to websocket server closed.');
+        });
+
+        var battery_listener = new ROSLIB.Topic({
+          ros : ros,
+          name : '/batt1_status',
+          messageType : 'bbauv_msgs/Battery'
+        });
+        console.log(battery_listener);
+        var controller_status_listener = new ROSLIB.Topic({
+          ros : ros,
+          name : '/controller/status',
+          messageType : 'controls/status'
+        });
+
+        var sa_stats_listener = new ROSLIB.Topic({
+          ros : ros,
+          name : '/SA_stats',
+          messageType : 'bbauv_msgs/SAStats'
+        });
+
+        battery_listener.subscribe(function(message) {
+          $('#battery_capacity').text(message.capacity);
+          $('#battery_temperature').text(message.temperature);
+          $('#battery_pressure').text(message.pressure);
+          $('#battery_used_mah').text(message.used_mah);
+          $('#battery_current').text(message.current);
+          $('#battery_voltage').text(message.voltage);
+        });
+
+
+        controller_status_listener.subscribe(function(message) {
+          console.log(message);
+        });
+
+        sa_stats_listener.subscribe(function(message) {
+          $('#sa_stats_temperature').text(message.temperature);
+          $('#sa_stats_initial_pressure').text(message.initial_pressure);
+          $('#sa_stats_internal_pressure').text(message.internal_pressure);
+          $('#sa_stats_internal_humidity').text(message.internal_humidity);
+          $('#sa_stats_leak').text(message.leak);
+        });
+
+        $('.arm').click(function(e) {
+          console.log($(this).attr('id'));
+          var isButtonDisabled = $(this).attr('disabled');
+          if(isButtonDisabled !== 'disabled') {
+            $(this).attr('disabled', 'disabled');
+            $(this).text('Armed');
+            $("#"+getBuddyFireId($(this).attr('id'))).removeAttr('disabled');
+          }
+        });
+
+        $('.fire').click(function(e) {
+          console.log($(this).attr('disabled'));
+          var isButtonDisabled = $(this).attr('disabled');
+          if(isButtonDisabled === 'disabled') {
+            $(this).removeAttr('disabled');
+          } else {
+            $(this).attr('disabled', 'disabled');
+          }
+        });
+
+        function getBuddyFireId(id) {
+          return id.replace("arm", "fire");
+        }
       });
 
-      ros.on('connection', function() {
-        console.log('Connected to websocket server.');
-      });
-
-      ros.on('error', function(error) {
-        console.log('Error connecting to websocket server: ', error);
-      });
-
-      ros.on('close', function() {
-        console.log('Connection to websocket server closed.');
-      });
-
-      var battery_listener = new ROSLIB.Topic({
-        ros : ros,
-        name : '/batt1_status',
-        messageType : 'bbauv_msgs/Battery'
-      });
-
-      var sa_stats_listener = new ROSLIB.Topic({
-        ros : ros,
-        name : '/SA_stats',
-        messageType : 'bbauv_msgs/SAStats'
-      });
-
-      battery_listener.subscribe(function(message) {
-        $('#battery_capacity').text(message.capacity);
-        $('#battery_temperature').text(message.temperature);
-        $('#battery_pressure').text(message.pressure);
-        $('#battery_used_mah').text(message.used_mah);
-        $('#battery_current').text(message.current);
-        $('#battery_voltage').text(message.voltage);
-      });
-
-      sa_stats_listener.subscribe(function(message) {
-        $('#sa_stats_temperature').text(message.temperature);
-        $('#sa_stats_initial_pressure').text(message.initial_pressure);
-        $('#sa_stats_internal_pressure').text(message.internal_pressure);
-        $('#sa_stats_internal_humidity').text(message.internal_humidity);
-        $('#sa_stats_leak').text(message.leak);
-      });
     </script>
   </head>
 
@@ -105,6 +142,50 @@
         <tr>
           <td>Leak?</td>
           <td id="sa_stats_leak"></td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <th colspan="2">Controller Status</th>
+        </tr>
+        <tr>
+          <td>Capacity</td>
+          <td id="battery_capacity"></td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <th colspan="2">Actuators</th>
+        </tr>
+        <tr>
+          <td>Torpedo - Top</td>
+          <td><button id="arm-topedo-top" class="arm">Arm</button></td>
+          <td><button id="fire-topedo-top" class="fire" disabled="disabled">Fire</button></td>
+        </tr>
+        <tr>
+          <td>Torpedo - Bottom</td>
+          <td><button id="arm-topedo-bottom" class="arm">Arm</button></td>
+          <td><button id="fire-topedo-bottom" class="fire" disabled="disabled">Fire</button></td>
+        </tr>
+        <tr>
+          <td>Dropper</td>
+          <td><button id="arm-dropper" class="arm">Arm</button></td>
+          <td><button id="fire-dropper"class="fire" disabled="disabled">Fire</button></td>
+        </tr>
+        <tr>
+          <td>Grabber</td>
+          <td><button id="arm-grabber" class="arm">Arm</button></td>
+          <td><button id="fire-grabber" class="fire" disabled="disabled">Fire</button></td>
+        </tr>
+        <tr>
+          <td>Rotary - Vertical</td>
+          <td><button id="arm-rotary-vertical" class="arm">Arm</button></td>
+          <td><button id="fire-rotary-vertical" class="fire" disabled="disabled">Fire</button></td>
+        </tr>
+        <tr>
+          <td>Rotary - Horizontal</td>
+          <td><button id="arm-rotary-horizontal" class="arm">Arm</button></td>
+          <td><button id="fire-rotary-horizontal" class="fire" disabled="disabled">Fire</button></td>
         </tr>
       </table>
       <table>
