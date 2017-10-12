@@ -187,7 +187,30 @@
         }
 
         $('.thruster').click(function(e) {
-          console.log($(e.target).attr('id'));
+          var targetId = $(e.target).attr('id');
+
+          var THRUSTER_ACTIVE_VALUE = 100;
+          var thrusterValues = [0, 0, 0, 0, 0, 0, 0, 0];
+
+          var getIntFromTargetIdRegex = /thruster_(\d)_test/g;
+          var match = getIntFromTargetIdRegex.exec(targetId);
+
+          var thrusterIndex = match[1] - 1;
+
+          thrusterValues[thrusterIndex] = THRUSTER_ACTIVE_VALUE;
+
+          var thrusterMessage = new ROSLIB.Message({
+            thruster1: thrusterValues[0],
+            thruster2: thrusterValues[1],
+            thruster3: thrusterValues[2],
+            thruster4: thrusterValues[3],
+            thruster5: thrusterValues[4],
+            thruster6: thrusterValues[5],
+            thruster7: thrusterValues[6],
+            thruster8: thrusterValues[7],
+          });
+
+          thruster_listener.publish(thrusterMessage);
         });
 
         var killService = new ROSLIB.Service({
@@ -317,7 +340,7 @@
             <tr>
               <td>Thruster 3</td>
               <td id="thruster_3">0</td>
-              <td><button class="thruster" id="Thruster_3_test">Test</button></td>
+              <td><button class="thruster" id="thruster_3_test">Test</button></td>
             </tr>
             <tr>
               <td>Thruster 4</td>
