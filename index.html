@@ -187,7 +187,7 @@
         }
 
         $('.thruster').click(function(e) {
-
+          console.log($(e.target).attr('id'));
         });
 
         var killService = new ROSLIB.Service({
@@ -307,42 +307,42 @@
             <tr>
               <td>Thruster 1</td>
               <td id="thruster_1">0</td>
-              <td><button class="thruster">Test</button></td>
+              <td><button class="thruster" id="thruster_1_test">Test</button></td>
             </tr>
             <tr>
               <td>Thruster 2</td>
               <td id="thruster_2">0</td>
-              <td><button class="thruster">Test</button></td>
+              <td><button class="thruster" id="thruster_2_test">Test</button></td>
             </tr>
             <tr>
               <td>Thruster 3</td>
               <td id="thruster_3">0</td>
-              <td><button class="thruster">Test</button></td>
+              <td><button class="thruster" id="Thruster_3_test">Test</button></td>
             </tr>
             <tr>
               <td>Thruster 4</td>
               <td id="thruster_4">0</td>
-              <td><button class="thruster">Test</button></td>
+              <td><button class="thruster" id="thruster_4_test">Test</button></td>
             </tr>
             <tr>
               <td>Thruster 5</td>
               <td id="thruster_5">0</td>
-              <td><button class="thruster">Test</button></td>
+              <td><button class="thruster" id="thruster_5_test">Test</button></td>
             </tr>
             <tr>
               <td>Thruster 6</td>
               <td id="thruster_6">0</td>
-              <td><button class="thruster">Test</button></td>
+              <td><button class="thruster" id="thruster_6_test">Test</button></td>
             </tr>
             <tr>
               <td>Thruster 7</td>
               <td id="thruster_7">0</td>
-              <td><button class="thruster">Test</button></td>
+              <td><button class="thruster" id="thruster_7_test">Test</button></td>
             </tr>
             <tr>
               <td>Thruster 8</td>
               <td id="thruster_8">0</td>
-              <td><button class="thruster">Test</button></td>
+              <td><button class="thruster" id="thruster_8_test">Test</button></td>
             </tr>
           </table>
         </div>
