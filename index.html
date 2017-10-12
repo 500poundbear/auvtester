@@ -10,7 +10,8 @@
     <title>AUV tester</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/custom.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -128,7 +129,7 @@
           $('#battery_pressure').text(message.pressure);
           $('#battery_used_mah').text(message.used_mah);
           $('#battery_current').text(message.current);
-          $('#battery_voltage').text(message.voltage);
+          $('#battery_voltage').text(Math.round(message.voltage * 100) / 100);
         });
 
 
@@ -184,6 +185,10 @@
         function getBuddyArmId(id) {
           return id.replace("fire", "arm");
         }
+
+        $('.thruster').click(function(e) {
+
+        });
       });
 
     </script>
@@ -194,156 +199,157 @@
     <!-- Begin page content -->
     <div class="container">
       <div class="page-header">
-        <h1>AUV Control Test</h1>
+          <h1>AUV Control Test (Bumblebee)</h1>
       </div>
-      <p class="lead">Bumblebee</p>
-      <table>
-        <tr>
-          <th colspan="2">SA Stats</th>
-        </tr>
-        <tr>
-          <td>Temperature</td>
-          <td id="sa_stats_temperature"></td>
-        </tr>
-        <tr>
-          <td>Initial Pressure</td>
-          <td id="sa_stats_initial_pressure"></td>
-        </tr>
-        <tr>
-          <td>Internal Pressure</td>
-          <td id="sa_stats_internal_pressure"></td>
-        </tr>
-        <tr>
-          <td>Internal Humidity</td>
-          <td id="sa_stats_internal_humidity"></td>
-        </tr>
-        <tr>
-          <td>Leak?</td>
-          <td id="sa_stats_leak"></td>
-        </tr>
-      </table>
-      <table>
-        <tr>
-          <th colspan="2">Controller Status</th>
-        </tr>
-        <tr>
-          <td>Capacity</td>
-          <td id="battery_capacity"></td>
-        </tr>
-      </table>
-      <table>
-        <tr>
-          <th colspan="2">Actuators</th>
-        </tr>
-        <tr>
-          <td>Torpedo - Top</td>
-          <td><button id="arm-torpedo-top" class="arm">Arm</button></td>
-          <td><button id="fire-torpedo-top" class="fire" disabled="disabled">Fire</button></td>
-        </tr>
-        <tr>
-          <td>Torpedo - Bottom</td>
-          <td><button id="arm-torpedo-bottom" class="arm">Arm</button></td>
-          <td><button id="fire-torpedo-bottom" class="fire" disabled="disabled">Fire</button></td>
-        </tr>
-        <tr>
-          <td>Dropper</td>
-          <td><button id="arm-dropper" class="arm">Arm</button></td>
-          <td><button id="fire-dropper"class="fire" disabled="disabled">Fire</button></td>
-        </tr>
-        <tr>
-          <td>Grabber</td>
-          <td><button id="arm-grabber" class="arm">Arm</button></td>
-          <td><button id="fire-grabber" class="fire" disabled="disabled">Fire</button></td>
-        </tr>
-        <tr>
-          <td>Rotary - Vertical</td>
-          <td><button id="arm-rotary-vertical" class="arm">Arm</button></td>
-          <td><button id="fire-rotary-vertical" class="fire" disabled="disabled">Fire</button></td>
-        </tr>
-        <tr>
-          <td>Rotary - Horizontal</td>
-          <td><button id="arm-rotary-horizontal" class="arm">Arm</button></td>
-          <td><button id="fire-rotary-horizontal" class="fire" disabled="disabled">Fire</button></td>
-        </tr>
-      </table>
-      <table>
-        <tr>
-          <th colspan="2">Battery</th>
-        </tr>
-        <tr>
-          <td>Capacity</td>
-          <td id="battery_capacity"></td>
-        </tr>
-        <tr>
-          <td>Temperature</td>
-          <td id="battery_temperature"></td>
-        </tr>
-        <tr>
-          <td>Pressure</td>
-          <td id="battery_pressure"></td>
-        </tr>
-        <tr>
-          <td>Used mah</td>
-          <td id="battery_used_mah"></td>
-        </tr>
-        <tr>
-          <td>Current</td>
-          <td id="battery_current"></td>
-        </tr>
-        <tr>
-          <td>Voltage</td>
-          <td id="battery_voltage"></td>
-        </tr>
-      </table>
-
-      <table>
-        <tr>
-          <th>Thruster</th>
-          <th>Value</th>
-          <th>Test</th>
-        </tr>
-        <tr>
-          <td>Thruster 1</td>
-          <td id="thruster_1">0</td>
-          <td><button class="thruster">Test</button></td>
-        </tr>
-        <tr>
-          <td>Thruster 2</td>
-          <td id="thruster_2">0</td>
-          <td><button class="thruster">Test</button></td>
-        </tr>
-        <tr>
-          <td>Thruster 3</td>
-          <td id="thruster_3">0</td>
-          <td><button class="thruster">Test</button></td>
-        </tr>
-        <tr>
-          <td>Thruster 4</td>
-          <td id="thruster_4">0</td>
-          <td><button class="thruster">Test</button></td>
-        </tr>
-        <tr>
-          <td>Thruster 5</td>
-          <td id="thruster_5">0</td>
-          <td><button class="thruster">Test</button></td>
-        </tr>
-        <tr>
-          <td>Thruster 6</td>
-          <td id="thruster_6">0</td>
-          <td><button class="thruster">Test</button></td>
-        </tr>
-        <tr>
-          <td>Thruster 7</td>
-          <td id="thruster_7">0</td>
-          <td><button class="thruster">Test</button></td>
-        </tr>
-        <tr>
-          <td>Thruster 8</td>
-          <td id="thruster_8">0</td>
-          <td><button class="thruster">Test</button></td>
-        </tr>
-      </table>
-
+      <div class="row">
+        <div class="col">
+          <table>
+            <tr>
+              <th colspan="2">SA Stats</th>
+            </tr>
+            <tr>
+              <td>Temperature</td>
+              <td id="sa_stats_temperature"></td>
+            </tr>
+            <tr>
+              <td>Initial Pressure</td>
+              <td id="sa_stats_initial_pressure"></td>
+            </tr>
+            <tr>
+              <td>Internal Pressure</td>
+              <td id="sa_stats_internal_pressure"></td>
+            </tr>
+            <tr>
+              <td>Internal Humidity</td>
+              <td id="sa_stats_internal_humidity"></td>
+            </tr>
+            <tr>
+              <td>Leak?</td>
+              <td id="sa_stats_leak"></td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <td><button class="btn" id="killpid">Kill PID</button></td>
+            </tr>
+          </table>
+        </div>
+        <div class="col">
+          <table>
+            <tr>
+              <th colspan="2">Actuators</th>
+            </tr>
+            <tr>
+              <td>Torpedo - Top</td>
+              <td><button id="arm-torpedo-top" class="arm">Arm</button></td>
+              <td><button id="fire-torpedo-top" class="fire" disabled="disabled">Fire</button></td>
+            </tr>
+            <tr>
+              <td>Torpedo - Bottom</td>
+              <td><button id="arm-torpedo-bottom" class="arm">Arm</button></td>
+              <td><button id="fire-torpedo-bottom" class="fire" disabled="disabled">Fire</button></td>
+            </tr>
+            <tr>
+              <td>Dropper</td>
+              <td><button id="arm-dropper" class="arm">Arm</button></td>
+              <td><button id="fire-dropper"class="fire" disabled="disabled">Fire</button></td>
+            </tr>
+            <tr>
+              <td>Grabber</td>
+              <td><button id="arm-grabber" class="arm">Arm</button></td>
+              <td><button id="fire-grabber" class="fire" disabled="disabled">Fire</button></td>
+            </tr>
+            <tr>
+              <td>Rotary - Vertical</td>
+              <td><button id="arm-rotary-vertical" class="arm">Arm</button></td>
+              <td><button id="fire-rotary-vertical" class="fire" disabled="disabled">Fire</button></td>
+            </tr>
+            <tr>
+              <td>Rotary - Horizontal</td>
+              <td><button id="arm-rotary-horizontal" class="arm">Arm</button></td>
+              <td><button id="fire-rotary-horizontal" class="fire" disabled="disabled">Fire</button></td>
+            </tr>
+          </table>
+        </div>
+        <div class="col">
+          <table>
+            <tr>
+              <th colspan="3">Thrusters</th>
+            </tr>
+            <tr>
+              <td>Thruster 1</td>
+              <td id="thruster_1">0</td>
+              <td><button class="thruster">Test</button></td>
+            </tr>
+            <tr>
+              <td>Thruster 2</td>
+              <td id="thruster_2">0</td>
+              <td><button class="thruster">Test</button></td>
+            </tr>
+            <tr>
+              <td>Thruster 3</td>
+              <td id="thruster_3">0</td>
+              <td><button class="thruster">Test</button></td>
+            </tr>
+            <tr>
+              <td>Thruster 4</td>
+              <td id="thruster_4">0</td>
+              <td><button class="thruster">Test</button></td>
+            </tr>
+            <tr>
+              <td>Thruster 5</td>
+              <td id="thruster_5">0</td>
+              <td><button class="thruster">Test</button></td>
+            </tr>
+            <tr>
+              <td>Thruster 6</td>
+              <td id="thruster_6">0</td>
+              <td><button class="thruster">Test</button></td>
+            </tr>
+            <tr>
+              <td>Thruster 7</td>
+              <td id="thruster_7">0</td>
+              <td><button class="thruster">Test</button></td>
+            </tr>
+            <tr>
+              <td>Thruster 8</td>
+              <td id="thruster_8">0</td>
+              <td><button class="thruster">Test</button></td>
+            </tr>
+          </table>
+        </div>
+        <div class="col">
+          <table>
+            <tr>
+              <th colspan="2">Battery</th>
+            </tr>
+            <tr>
+              <td>Capacity</td>
+              <td id="battery_capacity"></td>
+            </tr>
+            <tr>
+              <td>Temperature</td>
+              <td id="battery_temperature"></td>
+            </tr>
+            <tr>
+              <td>Pressure</td>
+              <td id="battery_pressure"></td>
+            </tr>
+            <tr>
+              <td>Used mah</td>
+              <td id="battery_used_mah"></td>
+            </tr>
+            <tr>
+              <td>Current</td>
+              <td id="battery_current"></td>
+            </tr>
+            <tr>
+              <td>Voltage</td>
+              <td id="battery_voltage"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
     </div>
 
     <footer class="footer">

@@ -1,0 +1,14 @@
+.page-header{
+  background-color: #f4ee42;
+  text-align: center;
+  padding: 10px 0px;
+}
+table {
+  border: 5px solid #d8d7bc;
+  width: 100%;
+  margin-top:5px;
+}
+#killpid {
+  width: 100%;
+  background-color: #f4ee42;
+}
