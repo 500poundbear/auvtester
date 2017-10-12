@@ -27,8 +27,9 @@
       // Connecting to ROS
       // -----------------
       $(document).ready(function() {
+        var rosUrl = prompt("Websocket URL", 'ws://localhost:9090');
         var ros = new ROSLIB.Ros({
-          url : 'ws://localhost:9090'
+          url : rosUrl
         });
 
         ros.on('connection', function() {
@@ -43,12 +44,66 @@
           console.log('Connection to websocket server closed.');
         });
 
+        var manipulatorsService = new ROSLIB.Service({
+          ros : ros,
+          name : '/manipulators',
+          serviceType : 'bbauv_msgs/Manipulators'
+        });
+
+       function callManipulatorService(id) {
+         var tt = false;
+         var bt = false;
+         var dr = false;
+         var gr = false;
+         var rv = false;
+         var rh = false;
+
+         switch(id) {
+           case 'fire-torpedo-top':
+             tt = true;
+             break;
+           case 'fire-torpedo-bottom':
+             bt = true;
+             break;
+           case 'fire-dropper':
+             dr = true;
+             break;
+           case 'fire-grabber':
+             gr = true;
+             break;
+           case 'fire-rotary-vertical':
+             rv = true;
+             break;
+           case 'fire-rotary-horizontal':
+             rh = true;
+             break;
+         }
+
+         var values = {
+           top_torpedo: tt,
+           bottom_torpedo: bt,
+           dropper: dr,
+           grabber: gr,
+           rotary_vertical: rv,
+           rotary_horizontal: rh
+         };
+         console.log(values);
+         var request = new ROSLIB.ServiceRequest(values);
+
+         manipulatorsService.callService(request, function(result) {
+           console.log('Result for service call on '
+             + manipulatorsService.name
+             + ': '
+             + result);
+         });
+       }
+
         var battery_listener = new ROSLIB.Topic({
           ros : ros,
           name : '/batt1_status',
           messageType : 'bbauv_msgs/Battery'
         });
-        console.log(battery_listener);
+
         var controller_status_listener = new ROSLIB.Topic({
           ros : ros,
           name : '/controller/status',
@@ -59,6 +114,12 @@
           ros : ros,
           name : '/SA_stats',
           messageType : 'bbauv_msgs/SAStats'
+        });
+
+        var thruster_listener = new ROSLIB.Topic({
+          ros : ros,
+          name : '/thruster_speed',
+          messageType : 'bbauv_msgs/Thrusters'
         });
 
         battery_listener.subscribe(function(message) {
@@ -83,8 +144,18 @@
           $('#sa_stats_leak').text(message.leak);
         });
 
+        thruster_listener.subscribe(function(message) {
+          $('#thruster_1').text(message.thruster1);
+          $('#thruster_2').text(message.thruster2);
+          $('#thruster_3').text(message.thruster3);
+          $('#thruster_4').text(message.thruster4);
+          $('#thruster_5').text(message.thruster5);
+          $('#thruster_6').text(message.thruster6);
+          $('#thruster_7').text(message.thruster7);
+          $('#thruster_8').text(message.thruster8);
+        });
+
         $('.arm').click(function(e) {
-          console.log($(this).attr('id'));
           var isButtonDisabled = $(this).attr('disabled');
           if(isButtonDisabled !== 'disabled') {
             $(this).attr('disabled', 'disabled');
@@ -94,17 +165,24 @@
         });
 
         $('.fire').click(function(e) {
-          console.log($(this).attr('disabled'));
           var isButtonDisabled = $(this).attr('disabled');
           if(isButtonDisabled === 'disabled') {
             $(this).removeAttr('disabled');
           } else {
             $(this).attr('disabled', 'disabled');
+            $("#"+getBuddyArmId($(this).attr('id'))).removeAttr('disabled');
+            $("#"+getBuddyArmId($(this).attr('id'))).text('Arm');
+            console.log($(e.target).attr('id'));
+            callManipulatorService($(e.target).attr('id'));
           }
         });
 
         function getBuddyFireId(id) {
           return id.replace("arm", "fire");
+        }
+
+        function getBuddyArmId(id) {
+          return id.replace("fire", "arm");
         }
       });
 
@@ -159,13 +237,13 @@
         </tr>
         <tr>
           <td>Torpedo - Top</td>
-          <td><button id="arm-topedo-top" class="arm">Arm</button></td>
-          <td><button id="fire-topedo-top" class="fire" disabled="disabled">Fire</button></td>
+          <td><button id="arm-torpedo-top" class="arm">Arm</button></td>
+          <td><button id="fire-torpedo-top" class="fire" disabled="disabled">Fire</button></td>
         </tr>
         <tr>
           <td>Torpedo - Bottom</td>
-          <td><button id="arm-topedo-bottom" class="arm">Arm</button></td>
-          <td><button id="fire-topedo-bottom" class="fire" disabled="disabled">Fire</button></td>
+          <td><button id="arm-torpedo-bottom" class="arm">Arm</button></td>
+          <td><button id="fire-torpedo-bottom" class="fire" disabled="disabled">Fire</button></td>
         </tr>
         <tr>
           <td>Dropper</td>
@@ -226,43 +304,43 @@
         </tr>
         <tr>
           <td>Thruster 1</td>
-          <td><input type="text" value="5"/></td>
-          <td><button>Test</button></td>
+          <td id="thruster_1">0</td>
+          <td><button class="thruster">Test</button></td>
         </tr>
         <tr>
           <td>Thruster 2</td>
-          <td><input type="text" value="5"/></td>
-          <td><button>Test</button></td>
+          <td id="thruster_2">0</td>
+          <td><button class="thruster">Test</button></td>
         </tr>
         <tr>
           <td>Thruster 3</td>
-          <td><input type="text" value="5"/></td>
-          <td><button>Test</button></td>
+          <td id="thruster_3">0</td>
+          <td><button class="thruster">Test</button></td>
         </tr>
         <tr>
           <td>Thruster 4</td>
-          <td><input type="text" value="5"/></td>
-          <td><button>Test</button></td>
+          <td id="thruster_4">0</td>
+          <td><button class="thruster">Test</button></td>
         </tr>
         <tr>
           <td>Thruster 5</td>
-          <td><input type="text" value="5"/></td>
-          <td><button>Test</button></td>
+          <td id="thruster_5">0</td>
+          <td><button class="thruster">Test</button></td>
         </tr>
         <tr>
           <td>Thruster 6</td>
-          <td><input type="text" value="5"/></td>
-          <td><button>Test</button></td>
+          <td id="thruster_6">0</td>
+          <td><button class="thruster">Test</button></td>
         </tr>
         <tr>
           <td>Thruster 7</td>
-          <td><input type="text" value="5"/></td>
-          <td><button>Test</button></td>
+          <td id="thruster_7">0</td>
+          <td><button class="thruster">Test</button></td>
         </tr>
         <tr>
           <td>Thruster 8</td>
-          <td><input type="text" value="5"/></td>
-          <td><button>Test</button></td>
+          <td id="thruster_8">0</td>
+          <td><button class="thruster">Test</button></td>
         </tr>
       </table>
 
